@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N maximin
+#PBS -o maximin.out
+#PBS -e maximin.err
+#PBS -q cpuq
+#PBS -l nodes=1:ppn=1
+#PBS -r y
+export CUDA_HOME=/usr/local/cuda
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib:$LD_LIBRARY_PATH
+
+cd $PBS_O_WORKDIR
+source /home/ug2018/ug518111910129/.bashrc
+# gzip *.vcf
+~/.conda/envs/sy_Env/bin/Rscript maximin.R

@@ -1,0 +1,42 @@
+[#.......] Reading VCF file..
+[##......] Chromosome:   6  Mbp:  0.203878  Region Size:  10152.61 kb  Num of individuals: 1000 
+[##......] Before filtering  Num of variants: 5000 Num of individuals: 1000 
+[###.....] After filtering  Num of variants: 5000 Num of individuals: 1000 
+[#.......] Reading VCF file..
+[##......] Chromosome:   6  Mbp:  0.203878  Region Size:  10152.61 kb  Num of individuals: 4000 
+[##......] Before filtering  Num of variants: 5000 Num of individuals: 4000 
+[###.....] After filtering  Num of variants: 5000 Num of individuals: 4000 
+[#.......] Reading VCF file..
+[##......] Chromosome:   6  Mbp:  0.203878  Region Size:  10152.61 kb  Num of individuals: 6000 
+[##......] Before filtering  Num of variants: 5000 Num of individuals: 6000 
+[###.....] After filtering  Num of variants: 5000 Num of individuals: 6000 
+     user    system   elapsed 
+ 9166.291 12747.677   895.858 
+[1] "all zero, skip"
+[1] 4.954165e-03 6.862179e-06 2.316000e-02
+[1] 0.06019409 0.01311933 0.04331104
+[1] 0.22736431 0.05631378 0.08774573
+[1] 0.4325998 0.1291305 0.2375745
+[1] 0.7302040 0.2874217 0.4997174
+[1] 0.8460622 0.3360590 0.6206264
+[1] 0.9165697 0.3224109 0.6918190
+[1] 0.9165778 0.3226007 0.6931152
+[1] 0.9170872 0.3225975 0.6934539
+[#.......] Reading VCF file..
+[##......] Chromosome:   6  Mbp:  0.203878  Region Size:  10152.61 kb  Num of individuals: 100 
+[##......] Before filtering  Num of variants: 5000 Num of individuals: 100 
+[###.....] After filtering  Num of variants: 5000 Num of individuals: 100 
+          [,1]
+[1,] 0.3730276
+[#.......] Reading VCF file..
+[##......] Chromosome:   6  Mbp:  0.203878  Region Size:  10152.61 kb  Num of individuals: 100 
+[##......] Before filtering  Num of variants: 5000 Num of individuals: 100 
+[###.....] After filtering  Num of variants: 5000 Num of individuals: 100 
+          [,1]
+[1,] 0.4070531
+[#.......] Reading VCF file..
+[##......] Chromosome:   6  Mbp:  0.203878  Region Size:  10152.61 kb  Num of individuals: 100 
+[##......] Before filtering  Num of variants: 5000 Num of individuals: 100 
+[###.....] After filtering  Num of variants: 5000 Num of individuals: 100 
+          [,1]
+[1,] 0.4851552
