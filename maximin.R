@@ -1,15 +1,15 @@
 # install.packages("SMME")
 library("SMME")
 
-ssize <- c(1000, 4000, 6000)
-p <- 5000
-zeta = c(10, 20)
+ssize <- c(10000, 40000, 60000)
+p <- 50000
+zeta = c(5, 10)
 ## read genotype files
-vcf_afr <- file.path("simu_afr_chr6_0.vcf.gz")
-vcf_eas <- file.path("simu_eas_chr6_0.vcf.gz")
-vcf_eur <- file.path("simu_eur_chr6_0.vcf.gz")
+vcf_afr <- file.path("simu_afr_chr4_0.vcf.gz")
+vcf_eas <- file.path("simu_eas_chr4_0.vcf.gz")
+vcf_eur <- file.path("simu_eur_chr4_0.vcf.gz")
 pop <- c("afr", "eas", "eur")
-vcf_test <- paste0("simu_test_", pop, "_chr6_0")
+vcf_test <- paste0("simu_test_", pop, "_chr4_0")
 
 vcf_vec <- c(vcf_afr, vcf_eas, vcf_eur)
 
@@ -22,16 +22,20 @@ for (i in 1:length(pop)) {
 
 y <- list()
 for (i in pop) {
-  y[[i]] = read.table(paste0("simu_", i, "_chr6_0.txt"), quote="\"", comment.char="")$V3
+  y[[i]] = read.table(paste0("simu_", i, "_chr4_0.txt"), quote="\"", comment.char="")$V3
 }
 
 ##fit model for range of lambda and zeta
-system.time(fit <- softmaximin(x, y, zeta = zeta, penalty = "lasso", alg = "npg", nlambda = 10, nthreads = 10))
+system.time(fit <- softmaximin(x, y, zeta = zeta, penalty = "lasso", alg = "npg", nlambda = 5, nthreads = 10))
 # Multithreading enabled using 10 threads
 # 用户    系统    流逝 
 # 1454.09 1217.09 1636.80 
-
+save(fit, file = "fit.RData")
+save(x, file = "x.RData")
+save(y, file = "y.RData")
 betahat <- fit$coef
+save(betahat, file = "betahat.RData")
+
 
 eval <- function(pred, ytest, family){
   if (family == 'binomial') {
@@ -56,6 +60,11 @@ cross_validation <- function(x, y, betahat, family = "gaussian"){
   metric = list()
   met_all = c()
   lam_idx = c()
+  if(typeof(betahat) != "list"){
+    tmpLis = list()
+    tmpLis[[1]] = betahat
+    betahat = tmpLis
+  }
   for (z_idx in 1:length(betahat)) {
     temp = c()
     for (lam in 1:dim(betahat[[z_idx]])[2]) {
@@ -84,9 +93,18 @@ cross_validation <- function(x, y, betahat, family = "gaussian"){
 
 res = cross_validation(x, y, betahat)
 z = fit$zeta[res$z_idx]
-lamda_cv = fit$lambda[[res$z_idx]][res$lam_idx[res$z_idx]]
-beta = fit$coef[[res$z_idx]][, res$lam_idx[res$z_idx]]
+if(typeof(fit$lambda) == "list"){
+  lamda_cv = fit$lambda[[res$z_idx]][res$lam_idx[res$z_idx]]
+}else{
+  lamda_cv = fit$lambda[res$lam_idx[res$z_idx]]
+}
+if(typeof(fit$coef) == "list"){
+  beta = fit$coef[[res$z_idx]][, res$lam_idx[res$z_idx]]
+}else{
+  beta = fit$coef[, res$lam_idx[res$z_idx]]
+}
 
+write.table(beta, paste0("maximin_beta.txt"), row.names = F, col.names = F, quote = F)
 #######################################################################
 ### evaluation
 ## metrics for selected beta
@@ -121,7 +139,11 @@ for(vcf_nm in vcf_test){
   x_test = t(vcf$gt1 + vcf$gt2)
   remove(vcf)
   y_test = read.table(paste0(vcf_nm, ".txt"), quote="\"", comment.char="")$V3
-  pred <- x_test %*% fit$coef[[res$z_idx]][, res$lam_idx[res$z_idx]]
+  if(typeof(fit$coef) == "list"){
+    pred <- x_test %*% fit$coef[[res$z_idx]][, res$lam_idx[res$z_idx]]
+  }else{
+    pred <- x_test %*% fit$coef[, res$lam_idx[res$z_idx]]
+  }
   outs_metric = c(outs_metric, cor(pred, y_test)^2)
   print(cor(pred, y_test)^2)
 }
